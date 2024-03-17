@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "181138225502",
+    "project_id": "bandmanagement-4ef64",
+    "storage_bucket": "bandmanagement-4ef64.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181138225502:android:2aba91aca80fd130f0f7cf",
+        "android_client_info": {
+          "package_name": "com.example.bandmanagement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4A59Euvc_DfUYNXCQK4b18F_QWPzO638"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181138225502:android:de98453de63d774af0f7cf",
+        "android_client_info": {
+          "package_name": "com.example.bandsmememe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4A59Euvc_DfUYNXCQK4b18F_QWPzO638"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

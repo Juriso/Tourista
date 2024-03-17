@@ -1,12 +1,13 @@
-// App.js
-
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from './SplashScreen';
 import LoginScreen from './LoginScreen';
-import SignInPage from './SignInPage'; // Import the SignInPage component
-import { AppProvider } from './AppContext'; // Import the AppProvider
+import SignInPage from './SignInPage';
+import CreateAccountPage from './CreateAccountPage';
+import HomeScreen from './HomeScreen';
+import MainScreen from './MainScreen'; // Import the MainScreen component
+import { AppProvider } from './AppContext';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,29 @@ const App = () => {
             options={{
               headerLeft: null,
               title: '',
+            }}
+          />
+          <Stack.Screen
+            name="CreateAccountPage"
+            component={CreateAccountPage}
+            options={{
+              headerLeft: null,
+              title: '',
+            }}
+          />
+          <Stack.Screen
+            name="HomeScreen"
+            component={HomeScreen}
+            options={{
+              headerLeft: null,
+              title: '',
+            }}
+          />
+          <Stack.Screen
+            name="MainScreen"
+            component={MainScreen}
+            options={{
+              headerShown: false,
             }}
           />
         </Stack.Navigator>
