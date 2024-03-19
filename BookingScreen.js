@@ -1,9 +1,7 @@
 // BookingScreen.js
-//./assets/images/qc.jpg
 
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, Dimensions } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import React from 'react';
+import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, Dimensions, ScrollView } from 'react-native'; // Import ScrollView from react-native
 
 const { width } = Dimensions.get('window');
 
@@ -14,9 +12,8 @@ const BookingScreen = () => {
     require('./assets/images/qc.jpg'),
   ];
 
-
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.topImageContainer}>
         <Image source={require('./assets/images/qc.jpg')} style={styles.topImage} resizeMode="cover" />
       </View>
@@ -25,9 +22,9 @@ const BookingScreen = () => {
         <TextInput style={styles.searchBar} placeholder="Search for places in Quezon City" />
       </View>
       <View style={styles.descriptionContainer}>
-          <Text style={styles.description}>
-            Quezon City is the largest city in Metro Manila by land area and population. It has a wide variety of places to visit and things to do.
-          </Text>
+        <Text style={styles.description}>
+          Quezon City is the largest city in Metro Manila by land area and population. It has a wide variety of places to visit and things to do.
+        </Text>
       </View>
       <ScrollView horizontal style={styles.carouselContainer}>
         <View style={styles.carouselItem}>
@@ -46,7 +43,7 @@ const BookingScreen = () => {
       <TouchableOpacity style={styles.bookButton}>
         <Text style={styles.bookButtonText}>Book Now</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -58,7 +55,7 @@ const styles = StyleSheet.create({
   topImageContainer: {
     position: 'relative',
     width: '100%',
-    height: '10%',
+    height: 200, // Adjust height as needed
   },
   topImage: {
     width: '100%',
@@ -67,9 +64,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
   },
   descriptionContainer: {
-    position: 'relative',
-    left: 0,
-    right: 0,
     padding: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     borderBottomLeftRadius: 20,
@@ -88,8 +82,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   cityLabel: {
-    bottom: 10,
-    top: 10,
     fontSize: 35,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -106,12 +98,11 @@ const styles = StyleSheet.create({
   },
   carouselContainer: {
     marginBottom: 10,
-    flex: 'relative',
+    height: 300, // Adjust height as needed
   },
   carouselItem: {
     marginRight: 10,
-    top: 10,
-
+    marginTop: 10,
   },
   carouselImage: {
     width: 200,
@@ -119,9 +110,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   carouselText: {
-    position: 'relative',
-    bottom: -5,
-    left: 10,
+    marginTop: 5,
     color: '#000000',
     fontSize: 16,
     fontWeight: 'bold',
@@ -130,17 +119,16 @@ const styles = StyleSheet.create({
   bookButton: {
     backgroundColor: '#F79F25',
     padding: 10,
-    width: 350,
+    width: 150, // Adjust width as needed
     borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    bottom: 80,
-    left: 40,
+    alignSelf: 'center',
+    marginTop: 20,
   },
   bookButtonText: {
     color: '#2D2D2D',
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
