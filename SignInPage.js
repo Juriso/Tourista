@@ -1,21 +1,51 @@
 // SignInPage.js
 
-import React from 'react';
-import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Dimensions } from 'react-native';
-import styles from './SignInPageStyles'; // Import the styles from the new file
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import styles from './SignInPageStyles';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from './firebaseConfig';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { firestore } from './firebaseConfig';
 
 const SignInPage = ({ navigation }) => {
   const screenWidth = Dimensions.get('window').width;
   const screenHeight = Dimensions.get('window').height;
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const handleCreateAccount = () => {
-    // Navigate to the CreateAccountPage when "Create Now" is pressed
     navigation.navigate('CreateAccountPage');
   };
 
-  const handleLogIn = () => {
-    // Navigate to the HomeScreen when "Log In" is pressed
-    navigation.navigate('MainScreen');
+  const handleLogIn = async () => {
+    try {
+      // Check if the email exists in Firestore
+      const userQuery = query(collection(firestore, 'users'), where('email', '==', email));
+      const querySnapshot = await getDocs(userQuery);
+      if (querySnapshot.empty) {
+        throw new Error('User not found');
+      }
+  
+      // Sign in with email and password
+      await signInWithEmailAndPassword(auth, email, password);
+      
+      navigation.navigate('MainScreen');
+    } catch (error) {
+      console.error('Error signing in: ', error);
+      if (error.message === 'User not found') {
+        Alert.alert(
+          'Error',
+          'The email address provided is not registered. Please sign up first.'
+        );
+      } else {
+        Alert.alert(
+          'Error',
+          'Incorrect email or password. Please try again.'
+        );
+      }
+    }
   };
 
   return (
@@ -33,12 +63,14 @@ const SignInPage = ({ navigation }) => {
               style={styles.input}
               placeholder="Email"
               placeholderTextColor="#aaa"
+              onChangeText={(text) => setEmail(text)}
             />
             <TextInput
               style={styles.input}
               placeholder="Password"
               placeholderTextColor="#aaa"
               secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
             />
           </View>
           <TouchableOpacity style={[styles.button, styles.signInButton]} onPress={handleLogIn}>
