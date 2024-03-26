@@ -92,6 +92,25 @@ const styles = StyleSheet.create({
   halfInput2: {
     flex: 1,
   },
+  passwordContainer: {
+    position: 'relative',
+    marginBottom: 20,
+  },
+  passwordInput: {
+    backgroundColor: '#fff',
+    padding: 15,
+    paddingLeft: 40, // Adjust to accommodate the icon
+    borderRadius: 5,
+  },
+  passwordToggleIcon: {
+    position: 'absolute',
+    top: '50%',
+    right: 15,
+    transform: [{ translateY: -50 }], // Center vertically
+    width: 24, // Adjust the width as needed
+    height: 24, // Adjust the height as needed
+    resizeMode: 'contain',
+  },
 });
 
 export default styles;

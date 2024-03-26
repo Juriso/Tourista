@@ -25,7 +25,23 @@ const SignInPage = ({ navigation }) => {
       const userQuery = query(collection(firestore, 'users'), where('email', '==', email));
       const querySnapshot = await getDocs(userQuery);
       if (querySnapshot.empty) {
-        throw new Error('User not found');
+        // If user not found, show alert and then navigate to CreateAccountPage
+        Alert.alert(
+          'User not found',
+          'The email address provided is not registered. Do you want to create an account?',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel'
+            },
+            {
+              text: 'Create Account',
+              onPress: () => navigation.navigate('CreateAccountPage')
+            }
+          ]
+        );
+        return; // Exit the function
       }
   
       // Sign in with email and password
@@ -34,19 +50,13 @@ const SignInPage = ({ navigation }) => {
       navigation.navigate('MainScreen');
     } catch (error) {
       console.error('Error signing in: ', error);
-      if (error.message === 'User not found') {
-        Alert.alert(
-          'Error',
-          'The email address provided is not registered. Please sign up first.'
-        );
-      } else {
-        Alert.alert(
-          'Error',
-          'Incorrect email or password. Please try again.'
-        );
-      }
+      Alert.alert(
+        'Error',
+        error.message === 'User not found' ? 'The email address provided is not registered. Please sign up first.' : 'Incorrect email or password. Please try again.'
+      );
     }
   };
+  
 
   return (
     <View style={styles.container}>

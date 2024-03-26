@@ -1,41 +1,86 @@
-// CreateAccountPage.js
-
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Dimensions, Alert } from 'react-native';
-import styles from './CreateAccountPageStyles';
+import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { sendEmailVerification } from 'firebase/auth';
 import { collection, addDoc } from 'firebase/firestore';
+import { Snackbar } from 'react-native-paper';
 import { firestore, auth } from './firebaseConfig';
+import styles from './CreateAccountPageStyles';
 
 const CreateAccountPage = ({ navigation }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false); // New state variable
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isValidPassword = (password) => {
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    
+    // Track requirements
+    let requirements = [];
+    if (!/(?=.*[A-Z])/.test(password)) {
+      requirements.push('uppercase character');
+    }
+    if (!/(?=.*\d)/.test(password)) {
+      requirements.push('number');
+    }
+    if (!/(?=.*[@$!%*?&])/.test(password)) {
+      requirements.push('special character');
+    }
+    if (password.length < 8) {
+      requirements.push('8 characters');
+    }
+    
+    if (requirements.length === 0) {
+      return true; // All requirements met
+    } else {
+      return `Password is missing: ${requirements.join(', ')}`;
+    }
+  };
+
+  // Function to handle password input change
+  const handlePasswordChange = (text) => {
+    setPassword(text);
+    setIsPasswordValid(isValidPassword(text)); // Update isPasswordValid state
+  };
 
   const handleCreateAccount = async () => {
+    if (!firstName || !lastName || !email || !password) {
+      setSnackbarMessage('Please fill out all fields.');
+      setSnackbarVisible(true);
+      return;
+    }
+  
+    if (!isValidEmail(email)) {
+      setSnackbarMessage('Please enter a valid email address.');
+      setSnackbarVisible(true);
+      return;
+    }
+  
+    const passwordValidationResult = isValidPassword(password);
+    if (typeof passwordValidationResult === 'string') { // Password requirements not met
+      setSnackbarMessage(passwordValidationResult);
+      setSnackbarVisible(true);
+      return;
+    }
+  
     try {
-      // Create user with email and password
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   
-      // Send email verification
       await sendEmailVerification(auth.currentUser);
   
-      // Notify user that account is successfully created
-      Alert.alert(
-        'Account Created',
-        'Your account has been successfully created. Please check your email for verification.',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('SignInPage') // Navigate to SignInPage
-          }
-        ],
-        { cancelable: false }
-      );
-
-      // Save user data to Firestore after successful email verification
+      setSnackbarMessage('Your account has been successfully created. Please check your email for verification.');
+      setSnackbarVisible(true);
+  
       await addDoc(collection(firestore, 'users'), {
         firstName: firstName,
         lastName: lastName,
@@ -43,58 +88,85 @@ const CreateAccountPage = ({ navigation }) => {
       });
     } catch (error) {
       console.error('Error creating account: ', error);
-      Alert.alert(
-        'Error',
-        'An error occurred while creating your account. Please try again later.'
-      );
+      if (error.code === 'auth/email-already-in-use') {
+        setSnackbarMessage('The email address is already in use. Please use a different email.');
+      } else {
+        setSnackbarMessage('An error occurred while creating your account. Please try again later.');
+      }
+      setSnackbarVisible(true);
     }
-  };
+  };      
 
   return (
     <View style={styles.container}>
-    <Text style={styles.title}>Have an Amazing Exploration!</Text>
-    <View style={styles.content}>
-      <Image
-        source={require('./assets/images/getting-started-image.png')}
-        style={styles.image}
-      />
-      <View style={styles.formContainer}>
-        <View style={styles.nameContainer}>
+      <Text style={styles.title}>Have an Amazing Exploration!</Text>
+      <View style={styles.content}>
+        <Image
+          source={require('./assets/images/getting-started-image.png')}
+          style={styles.image}
+        />
+        <View style={styles.formContainer}>
+          <View style={styles.nameContainer}>
+            <TextInput
+              style={[styles.input, styles.halfInput]}
+              placeholder="First Name"
+              placeholderTextColor="#aaa"
+              onChangeText={(text) => setFirstName(text)}
+            />
+            <TextInput
+              style={[styles.input, styles.halfInput2]}
+              placeholder="Last Name"
+              placeholderTextColor="#aaa"
+              onChangeText={(text) => setLastName(text)}
+            />
+          </View>
           <TextInput
-            style={[styles.input, styles.halfInput]}
-            placeholder="First Name"
+            style={styles.input}
+            placeholder="Email"
             placeholderTextColor="#aaa"
-            onChangeText={(text) => setFirstName(text)}
+            onChangeText={(text) => setEmail(text)}
           />
-          <TextInput
-            style={[styles.input, styles.halfInput2]}
-            placeholder="Last Name"
-            placeholderTextColor="#aaa"
-            onChangeText={(text) => setLastName(text)}
-          />
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={[styles.input, styles.passwordInput]}
+              placeholder="Password"
+              placeholderTextColor="#aaa"
+              secureTextEntry={!showPassword}
+              onChangeText={handlePasswordChange} // Pass the handler function
+            />
+            <TouchableOpacity
+              style={styles.passwordToggle}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Image
+                source={showPassword ? require('./assets/images/hide-password.png') : require('./assets/images/show-password.png')}
+                style={styles.passwordToggleIcon}
+              />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={[styles.button, styles.createAccountButton]} onPress={handleCreateAccount}>
+            <Text style={styles.buttonText}>Create Account</Text>
+          </TouchableOpacity>
+          <Text style={styles.createAccountText}>Already have an account? 
+            <Text style={styles.SignInLink} onPress={() => navigation.navigate('SignInPage')}> Log In</Text>
+          </Text>
         </View>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="#aaa"
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#aaa"
-          secureTextEntry={true}
-          onChangeText={(text) => setPassword(text)}
-        />
-        <TouchableOpacity style={[styles.button, styles.createAccountButton]} onPress={handleCreateAccount}>
-          <Text style={styles.buttonText}>Create Account</Text>
-        </TouchableOpacity>
-        <Text style={styles.createAccountText}>Already have an account? 
-          <Text style={styles.SignInLink} onPress={() => navigation.navigate('SignInPage')}> Log In</Text>
-        </Text>
       </View>
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => {
+          setSnackbarVisible(false);
+          navigation.navigate('SignInPage'); // Navigate to SignInPage after dismissing the snackbar
+        }}
+        duration={Snackbar.DURATION_SHORT}
+        action={{
+          label: 'OK',
+          onPress: () => setSnackbarVisible(false)
+        }}
+      >
+        {snackbarMessage}
+      </Snackbar>
     </View>
-  </View>
   );
 };
 
