@@ -18,6 +18,7 @@ import Place8 from './Place8';
 import Place9 from './Place9';
 import Place10 from './Place10';
 import { AppProvider } from './AppContext';
+import firestore from './firebaseConfig'; // Import firestore from firebaseConfig
 
 
 const Stack = createStackNavigator();
@@ -26,7 +27,13 @@ const App = () => {
   return (
     <AppProvider>
       <NavigationContainer>
-        <Stack.Navigator>
+      <Stack.Navigator
+          screenOptions={{
+            headerStyle: {
+              borderBottomWidth: 0, // Remove the border line
+            },
+          }}
+        >
           <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
           <Stack.Screen
             name="Home"
