@@ -6,6 +6,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { Snackbar } from 'react-native-paper';
 import { firestore, auth } from './firebaseConfig';
 import styles from './CreateAccountPageStyles';
+import { navigate } from './SignInPage'; // Import navigate function from your navigation file
 
 const CreateAccountPage = ({ navigation }) => {
   const [firstName, setFirstName] = useState('');
@@ -54,38 +55,57 @@ const CreateAccountPage = ({ navigation }) => {
   };
 
   const handleCreateAccount = async () => {
-    if (!firstName || !lastName || !email || !password) {
-      setSnackbarMessage('Please fill out all fields.');
+    // Check for missing fields
+    const missingFields = [];
+    if (!firstName) missingFields.push('First Name');
+    if (!lastName) missingFields.push('Last Name');
+    if (!email) missingFields.push('Email');
+    if (!password) missingFields.push('Password');
+  
+    if (missingFields.length > 0) {
+      // Construct error message specifying missing fields
+      const errorMessage = `Please fill out the following field(s): ${missingFields.join(', ')}.`;
+      setSnackbarMessage(errorMessage);
       setSnackbarVisible(true);
       return;
     }
   
+    // Check for valid email format
     if (!isValidEmail(email)) {
       setSnackbarMessage('Please enter a valid email address.');
       setSnackbarVisible(true);
       return;
     }
   
+    // Check for valid password format
     const passwordValidationResult = isValidPassword(password);
-    if (typeof passwordValidationResult === 'string') { // Password requirements not met
+    if (typeof passwordValidationResult === 'string') {
+      // Password requirements not met
       setSnackbarMessage(passwordValidationResult);
       setSnackbarVisible(true);
       return;
     }
   
     try {
+      // Create user account
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   
+      // Send email verification
       await sendEmailVerification(auth.currentUser);
   
+      // Display success message
       setSnackbarMessage('Your account has been successfully created. Please check your email for verification.');
       setSnackbarVisible(true);
   
+      // Add user data to Firestore
       await addDoc(collection(firestore, 'users'), {
         firstName: firstName,
         lastName: lastName,
         email: email,
       });
+  
+      // Navigate to SignInPage upon successful account creation
+      navigation.navigate('SignInPage'); // Updated navigation here
     } catch (error) {
       console.error('Error creating account: ', error);
       if (error.code === 'auth/email-already-in-use') {
@@ -95,7 +115,8 @@ const CreateAccountPage = ({ navigation }) => {
       }
       setSnackbarVisible(true);
     }
-  };      
+  };
+  
 
   return (
     <View style={styles.container}>
@@ -153,19 +174,12 @@ const CreateAccountPage = ({ navigation }) => {
         </View>
       </View>
       <Snackbar
-        visible={snackbarVisible}
-        onDismiss={() => {
-          setSnackbarVisible(false);
-          navigation.navigate('SignInPage'); // Navigate to SignInPage after dismissing the snackbar
-        }}
-        duration={Snackbar.DURATION_SHORT}
-        action={{
-          label: 'OK',
-          onPress: () => setSnackbarVisible(false)
-        }}
-      >
+         visible={snackbarVisible}
+         onDismiss={() => setSnackbarVisible(false)}
+         duration={Snackbar.DURATION_SHORT}
+        >
         {snackbarMessage}
-      </Snackbar>
+        </Snackbar>
     </View>
   );
 };

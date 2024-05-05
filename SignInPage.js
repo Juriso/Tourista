@@ -1,9 +1,9 @@
 // SignInPage.js
 
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Dimensions, Alert, Modal, Button } from 'react-native';
 import styles from './SignInPageStyles';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from './firebaseConfig';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { firestore } from './firebaseConfig';
@@ -14,6 +14,8 @@ const SignInPage = ({ navigation }) => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
 
   const handleCreateAccount = () => {
     navigation.navigate('CreateAccountPage');
@@ -21,11 +23,11 @@ const SignInPage = ({ navigation }) => {
 
   const handleLogIn = async () => {
     try {
-      // Check if the email exists in Firestore
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  
       const userQuery = query(collection(firestore, 'users'), where('email', '==', email));
       const querySnapshot = await getDocs(userQuery);
       if (querySnapshot.empty) {
-        // If user not found, show alert and then navigate to CreateAccountPage
         Alert.alert(
           'User not found',
           'The email address provided is not registered. Do you want to create an account?',
@@ -41,22 +43,42 @@ const SignInPage = ({ navigation }) => {
             }
           ]
         );
-        return; // Exit the function
+        return;
       }
   
-      // Sign in with email and password
-      await signInWithEmailAndPassword(auth, email, password);
-      
       navigation.navigate('MainScreen');
     } catch (error) {
       console.error('Error signing in: ', error);
+      if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+        Alert.alert(
+          'Incorrect Credentials',
+          'The email or password provided is incorrect. Please try again.'
+        );
+      } else {
+        Alert.alert(
+          'Error',
+          'An error occurred while signing in. Please try again later.'
+        );
+      }
+    }
+  };      
+
+  const handleForgotPassword = async () => {
+    try {
+      await sendPasswordResetEmail(auth, resetEmail);
+      Alert.alert(
+        'Password Reset Email Sent',
+        'Please check your email inbox for further instructions.'
+      );
+      setShowForgotPasswordModal(false);
+    } catch (error) {
+      console.error('Error sending password reset email: ', error);
       Alert.alert(
         'Error',
-        error.message === 'User not found' ? 'The email address provided is not registered. Please sign up first.' : 'Incorrect email or password. Please try again.'
+        'An error occurred while sending password reset email. Please try again later.'
       );
     }
   };
-  
 
   return (
     <View style={styles.container}>
@@ -82,6 +104,9 @@ const SignInPage = ({ navigation }) => {
               secureTextEntry={true}
               onChangeText={(text) => setPassword(text)}
             />
+            <TouchableOpacity onPress={() => setShowForgotPasswordModal(true)} style={styles.forgotPasswordLinkContainer}>
+              <Text style={styles.forgotPasswordLink}>Forgot Password?</Text>
+            </TouchableOpacity>
           </View>
           <TouchableOpacity style={[styles.button, styles.signInButton]} onPress={handleLogIn}>
             <Text style={styles.buttonText}>Log In</Text>
@@ -92,6 +117,28 @@ const SignInPage = ({ navigation }) => {
           </Text>
         </View>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showForgotPasswordModal}
+        onRequestClose={() => setShowForgotPasswordModal(false)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Forgot Password</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your email"
+              placeholderTextColor="#aaa"
+              onChangeText={(text) => setResetEmail(text)}
+            />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 20 }}>
+              <Button title="Cancel" onPress={() => setShowForgotPasswordModal(false)} />
+              <Button title="Reset Password" onPress={handleForgotPassword} />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

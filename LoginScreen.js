@@ -23,7 +23,7 @@ const LoginScreen = ({ navigation }) => {
           style={styles.image}
         />
         <TouchableOpacity style={[styles.button, styles.signInButton]} onPress={handleSignIn}>
-          <Text style={styles.buttonText}>Login In</Text>
+          <Text style={styles.buttonText}>Log In</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.createAccountButton]} onPress={(handleCreateAccount)}>
           <Text style={styles.buttonText}>Create an Account</Text>
