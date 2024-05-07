@@ -1,11 +1,13 @@
+// BottomTabNavigator.js
+
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; // Import Ionicons from Expo
 
 import HomeScreen from './HomeScreen';
 import BookingScreen from './BookingScreen';
-import ScannerScreen from './ScannerScreen';
 import ProfileScreen from './ProfileScreen';
+import ScannerStack from './ScannerStack'; // Import ScannerStack
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +22,7 @@ const BottomTabNavigator = () => {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'BookingScreen') {
             iconName = focused ? 'book' : 'book-outline';
-          } else if (route.name === 'ScannerScreen') {
+          } else if (route.name === 'ScannerStack') {
             iconName = focused ? 'scan' : 'scan-outline';
           } else if (route.name === 'ProfileScreen') {
             iconName = focused ? 'person' : 'person-outline';
@@ -38,13 +40,12 @@ const BottomTabNavigator = () => {
         },
       }}
     >
-      <Tab.Screen name="HomeScreen" component={HomeScreen} options={{ tabBarLabel: 'Home' }} />
-      <Tab.Screen name="BookingScreen" component={BookingScreen} options={{ tabBarLabel: 'Booking' }} />
-      <Tab.Screen name="ScannerScreen" component={ScannerScreen} options={{ tabBarLabel: 'Scanner' }} />
-      <Tab.Screen name="ProfileScreen" component={ProfileScreen} options={{ tabBarLabel: 'Profile' }} />
+      <Tab.Screen name="HomeScreen" component={HomeScreen} />
+      <Tab.Screen name="BookingScreen" component={BookingScreen} />
+      <Tab.Screen name="ScannerStack" component={ScannerStack} /> 
+      <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
     </Tab.Navigator>
   );
 };
 
 export default BottomTabNavigator;
-

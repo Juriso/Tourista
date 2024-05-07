@@ -32,18 +32,18 @@ const styles = StyleSheet.create({
   formContainer: {
     width: '100%',
     paddingHorizontal: 40,
-    backgroundColor: '#F8CE43', // Background color for the box background
-    flexGrow: 1, // Allow the container to grow to fill the remaining space
-    justifyContent: 'center', // Center children vertically
-    borderTopLeftRadius: 30, // Round top left corner
-    borderTopRightRadius: 30, // Round top right corner
-    overflow: 'hidden', // Hide overflowing content
+    backgroundColor: '#F8CE43',
+    flexGrow: 1,
+    justifyContent: 'center',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    overflow: 'hidden',
   },
   signUpTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10, // Adjusted margin
+    marginBottom: 10,
     color: '#000',
   },
   inputContainer: {
@@ -61,9 +61,9 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 5,
-    justifyContent: 'center', // Center text horizontally
-    alignItems: 'center', // Center text vertically
-    elevation: 5, // Add elevation for shadow effect
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
   },
   signInButton: {
     marginRight: 10,
@@ -76,11 +76,60 @@ const styles = StyleSheet.create({
   createAccountText: {
     textAlign: 'center',
     color: '#000',
-    marginTop: 10, // Adjusted margin
+    marginTop: 10,
   },
   createAccountLink: {
     color: '#DC622A',
-    textDecorationLine: 'underline', // Add underline to mimic hyperlink
+    textDecorationLine: 'underline',
+  },
+  forgotPasswordLinkContainer: {
+    alignSelf: 'flex-end',
+  },
+  forgotPasswordLink: {
+    color: '#DC622A',
+    textDecorationLine: 'underline',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+  },
+  modalView: {
+    backgroundColor: '#F8CE43', // Background color for the modal box
+    borderRadius: 10, // Rounded corners
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#000',
+  },
+  modalButton: {
+    backgroundColor: '#DC622A', // Change button color to blend with modal box
+    paddingVertical: 12, // Adjust button height
+    paddingHorizontal: 30, // Adjust button width
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    marginTop: 20,
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
