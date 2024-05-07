@@ -3,12 +3,16 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, Dimensions, ScrollView } from 'react-native'; // Import ScrollView from react-native
 
+
 const { width } = Dimensions.get('window');
 
-const BookingScreen = () => {
+
+const BookingScreen = ({ navigation }) => {
+  const handleBookingForm = () => {
+    navigation.navigate('BookingForm');
+  };
+
   const images = [
-    require('./assets/images/qc.jpg'),
-    require('./assets/images/qc.jpg'),
     require('./assets/images/qc.jpg'),
   ];
 
@@ -40,9 +44,10 @@ const BookingScreen = () => {
           <Text style={styles.carouselText}>La Mesa Ecopark</Text>
         </View>
       </ScrollView>
-      <TouchableOpacity style={styles.bookButton}>
+      <TouchableOpacity style={styles.bookButton} onPress={(handleBookingForm)}>
         <Text style={styles.bookButtonText}>Book Now</Text>
       </TouchableOpacity>
+      <View style={styles.footerSpacing}></View>
     </ScrollView>
   );
 };
@@ -55,7 +60,7 @@ const styles = StyleSheet.create({
   topImageContainer: {
     position: 'relative',
     width: '100%',
-    height: 200, // Adjust height as needed
+    height: 150 , // Adjust height as needed
   },
   topImage: {
     width: '100%',
@@ -130,6 +135,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  footerSpacing: {
+    height: 30,
+  }
 });
 
 export default BookingScreen;
