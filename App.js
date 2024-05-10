@@ -17,9 +17,12 @@ import Place7 from './Place7';
 import Place8 from './Place8';
 import Place9 from './Place9';
 import Place10 from './Place10';
+import Locations from './Locations';
+import BookingForm from './BookingForm';
 import { AppProvider } from './AppContext';
-import firestore from './firebaseConfig'; // Import firestore from firebaseConfig
+import { LogBox } from 'react-native';
 
+LogBox.ignoreAllLogs();
 
 const Stack = createStackNavigator();
 
@@ -27,13 +30,7 @@ const App = () => {
   return (
     <AppProvider>
       <NavigationContainer>
-      <Stack.Navigator
-          screenOptions={{
-            headerStyle: {
-              borderBottomWidth: 0, // Remove the border line
-            },
-          }}
-        >
+        <Stack.Navigator>
           <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
           <Stack.Screen
             name="Home"
@@ -143,7 +140,20 @@ const App = () => {
               headerShown: false,
             }}
           />
-          
+          <Stack.Screen
+            name="Locations"
+            component={Locations}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="BookingForm"
+            component={BookingForm}
+            options={{
+              headerShown: false,
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </AppProvider>

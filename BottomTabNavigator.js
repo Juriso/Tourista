@@ -18,13 +18,13 @@ const BottomTabNavigator = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'HomeScreen') {
+          if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'BookingScreen') {
+          } else if (route.name === 'Booking') {
             iconName = focused ? 'book' : 'book-outline';
-          } else if (route.name === 'ScannerStack') {
+          } else if (route.name === 'Scanner') {
             iconName = focused ? 'scan' : 'scan-outline';
-          } else if (route.name === 'ProfileScreen') {
+          } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
           }
 
@@ -40,10 +40,26 @@ const BottomTabNavigator = () => {
         },
       }}
     >
-      <Tab.Screen name="HomeScreen" component={HomeScreen} />
-      <Tab.Screen name="BookingScreen" component={BookingScreen} />
-      <Tab.Screen name="ScannerStack" component={ScannerStack} /> 
-      <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Tab.Screen 
+        name="Home" 
+        component={HomeScreen} 
+        options={{ headerShown: false }} // Hide header for HomeScreen
+      />
+      <Tab.Screen 
+        name="Booking" 
+        component={BookingScreen} 
+        options={{ headerShown: false }} // Hide header for BookingScreen
+      />
+      <Tab.Screen 
+        name="Scanner" 
+        component={ScannerStack} 
+        options={{ headerShown: false }} // Hide header for ScannerStack
+      />
+      <Tab.Screen 
+        name="Profile" 
+        component={ProfileScreen} 
+        options={{ headerShown: false }} // Hide header for ProfileScreen
+      />
     </Tab.Navigator>
   );
 };
