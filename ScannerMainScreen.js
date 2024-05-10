@@ -51,10 +51,10 @@ const ScannerMainScreen = () => {
                 <Text style={styles.modalText}>Choose an option</Text>
                 <View style={styles.buttonContainer}>
                   <TouchableOpacity style={[styles.modalButton, styles.orangeBackground, styles.buttonMargin]} onPress={() => handleOptionSelection('camera')}>
-                    <Text style={styles.modalButtonText}>Option 1</Text>
+                    <Text style={styles.modalButtonText}>Take an Image</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={[styles.modalButton, styles.orangeBackground, styles.buttonMargin]} onPress={() => handleOptionSelection('gallery')}>
-                    <Text style={styles.modalButtonText}>Option 2</Text>
+                    <Text style={styles.modalButtonText}>Upload Image</Text>
                   </TouchableOpacity>
                 </View>
               </View>

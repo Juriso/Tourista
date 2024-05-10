@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Button, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,23 +8,16 @@ export default function CameraScreen({ navigation }) {
 
   const handleCapture = async () => {
     if (cameraRef) {
-      const photo = await cameraRef.takePictureAsync();
-      console.log(photo);
-      // Navigate to ImagePreviewScreen and pass the captured photo URI as a parameter
-      navigation.navigate('ImagePreviewScreen', { photoUri: photo.uri });
+        const photo = await cameraRef.takePictureAsync({ quality: 0.5, format: 'jpeg' }); // Specify quality and format
+        console.log(photo.uri);
+
+      navigation.navigate('ImagePreviewScreen', { photoUri: photo.uri }); // Navigate to ImagePreviewScreen with the photo URI
     }
   };
 
   const handleClose = () => {
-    navigation.navigate('ScannerMain'); // Navigate back to ScannerMainScreen
+    navigation.goBack(); // Go back to the previous screen (ScannerMain)
   };
-
-  useEffect(() => {
-    return () => {
-      // Navigate back to the ScannerMain screen when unmounting the component
-      navigation.goBack();
-    };
-  }, []);
 
   let cameraRef;
 

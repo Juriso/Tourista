@@ -7,7 +7,6 @@ const HomeScreen = () => {
   const [searchText, setSearchText] = useState('');
 
   const handleCarouselItemPress = (itemName) => {
-   
     switch (itemName) {
       case 'Quezon Memorial Circle':
         navigation.navigate('Place1', { placeName: 'Quezon Memorial Circle' });
@@ -21,22 +20,22 @@ const HomeScreen = () => {
       case 'Smart Araneta Coliseum':
         navigation.navigate('Place4', { placeName: 'Smart Araneta Coliseum' });
         break;
-        case 'Real Monasterio ​de Santa Clara de Manila':
+      case 'Real Monasterio ​de Santa Clara de Manila':
         navigation.navigate('Place5', { placeName: 'Real Monasterio ​de Santa Clara de Manila' });
         break;
-        case 'Sining Kamalig':
+      case 'Sining Kamalig':
         navigation.navigate('Place6', { placeName: 'Sining Kamalig' });
         break;
-        case 'Minor Basilica':
+      case 'Minor Basilica':
         navigation.navigate('Place7', { placeName: 'Minor Basilica'});
         break;
-        case 'Archdiocesan Shrine of Mary':
+      case 'Archdiocesan Shrine of Mary':
         navigation.navigate('Place8', { placeName: 'Archdiocesan Shrine of Mary'});
         break;
-        case 'Santo Domingo Church':
+      case 'Santo Domingo Church':
         navigation.navigate('Place9', { placeName: 'Santo Domingo Church'});
         break;
-        case 'The Sunken Garden':
+      case 'The Sunken Garden':
         navigation.navigate('Place10', { placeName: 'The Sunken Garden'});
         break;
       default:
@@ -44,13 +43,18 @@ const HomeScreen = () => {
     }
   };
 
-  
+  const handleSeeAllPress = () => {
+    navigation.navigate('Locations');
+  };
+
   const filteredCarouselItems = searchText
     ? carouselItems.filter(item => item.toLowerCase().includes(searchText.toLowerCase()))
     : carouselItems;
 
   return (
     <ScrollView style={styles.container}>
+      
+
       <View style={styles.header}>
         <Text style={styles.headerText}>Hi User, Where would you like to go?</Text>
         <Image style={styles.profilePic} source={require('./assets/images/profilePic.png')} />
@@ -66,7 +70,25 @@ const HomeScreen = () => {
           <Image style={styles.searchIcon} source={require('./assets/images/searchIcon.png')} />
         </TouchableOpacity>
       </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button}>
+          <Image style={styles.buttonIcon} source={require('./assets/images/Travel.png')} />
+          <Text style={styles.buttonText}>Travel</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Image style={styles.buttonIcon} source={require('./assets/images/restaurant.png')} />
+          <Text style={styles.buttonText}>Restaurant</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}>
+          <Image style={styles.buttonIcon} source={require('./assets/images/hotel.png')} />
+          <Text style={styles.buttonText}>Hotel</Text>
+        </TouchableOpacity>
+      </View>
       
+      <TouchableOpacity style={styles.seeAllButton} onPress={handleSeeAllPress}>
+        <Text style={styles.seeAllButtonText}>See All</Text>
+      </TouchableOpacity>
+
       <ScrollView horizontal style={styles.carouselContainer}>
         {filteredCarouselItems.map((itemName, index) => (
           <TouchableOpacity key={index} onPress={() => handleCarouselItemPress(itemName)}>
@@ -81,18 +103,13 @@ const HomeScreen = () => {
   );
 };
 
-const carouselItems = ['Quezon Memorial Circle', 'Art in Island', 'La Mesa Ecopark', 'Smart Araneta Coliseum', 'Real Monasterio ​de Santa Clara de Manila', 'Sining Kamalig', 'Minor Basilica', 'Archdiocesan Shrine of Mary', 'Santo Domingo Church', 'The Sunken Garden' ];
+const carouselItems = ['Quezon Memorial Circle', 'Art in Island', 'La Mesa Ecopark'];
 const carouselImages = {
   'Quezon Memorial Circle': require('./assets/images/circle.jpg'),
   'Art in Island': require('./assets/images/Art.jpg'),
   'La Mesa Ecopark': require('./assets/images/La.jpg'),
-  'Smart Araneta Coliseum': require('./assets/images/Araneta.png'),
-  'Real Monasterio ​de Santa Clara de Manila': require('./assets/images/Real.jpg'),
-  'Sining Kamalig': require('./assets/images/sining.jpg'),
-  'Minor Basilica': require('./assets/images/Minor.jpg'),
-  'Archdiocesan Shrine of Mary': require('./assets/images/mary.jpg'),
-  'Santo Domingo Church': require('./assets/images/Santo.jpg'),
-  'The Sunken Garden': require('./assets/images/UP.jpg'),
+  
+  
 };
 
 const styles = StyleSheet.create({
@@ -137,23 +154,33 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 40, 
   },
-  seeAllContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  seeAllText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
   seeAllButton: {
     backgroundColor: '#007bff',
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 5,
+    marginBottom: 10,
+    alignSelf: 'flex-start', // Align button to the start of the container
   },
   seeAllButtonText: {
     color: '#fff',
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  button: {
+    alignItems: 'center',
+  },
+  buttonIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  buttonText: {
+    marginTop: 5,
     fontWeight: 'bold',
   },
   carouselContainer: {
