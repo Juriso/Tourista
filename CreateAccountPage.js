@@ -105,6 +105,7 @@ const CreateAccountPage = ({ navigation }) => {
         firstName,
         lastName,
         email,
+        phone: ""
       };
       await setDoc(doc(firestore, 'users', userId), userData);
       // Navigate to SignInPage upon successful account creation
