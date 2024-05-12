@@ -32,18 +32,18 @@ ProfileScreen = () => {
           style={styles.input}
           value={email}
           onChangeText={text => setEmail(text)} />
-         {/* <Text style={styles.label}>Phone</Text>
+         <Text style={styles.label}>Phone</Text>
         <TextInput
           style={styles.input}
           value={phone}
           onChangeText={text => setPhone(text)}
-          keyboardType="phone-pad" /> */}
-        <Text style={styles.label}>Password</Text>
-        <TextInput
+          keyboardType="phone-pad" />
+        { /* <Text style={styles.label}>Password</Text>
+         <TextInput
            style={styles.input}
           value={password}
            onChangeText={text => setPassword(text)}
-           secureTextEntry />
+           secureTextEntry /> */}
       </View>
     </>
   );
