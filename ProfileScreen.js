@@ -19,12 +19,14 @@ ProfileScreen = () => {
         <TextInput
           style={styles.input}
            value={firstName}
-           editable={true} />
+           onChangeText={text => setFirstName(text)}
+            />
         <Text style={styles.label}>Last Name</Text>
         <TextInput
           style={styles.input}
            value={lastName}
-           editable={true} />
+           editable={true}
+           onChangeText={text => setLastName(text)} />
          <Text style={styles.label}>Email</Text>
         <TextInput
           style={styles.input}
