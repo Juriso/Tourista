@@ -105,7 +105,8 @@ const CreateAccountPage = ({ navigation }) => {
         firstName,
         lastName,
         email,
-        phone: ""
+        phone: "",
+        profile_pic: "https://firebasestorage.googleapis.com/v0/b/cloudfinalproj-85441.appspot.com/o/profile_pics%2Fno_profile_pic.png?alt=media"
       };
       await setDoc(doc(firestore, 'users', userId), userData);
       // Navigate to SignInPage upon successful account creation

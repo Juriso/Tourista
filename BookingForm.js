@@ -11,12 +11,12 @@ const BookingForm = ({ navigation }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [date, setDate] = useState(null);
   const [showPickerDate, setShowPickerDate] = useState(false);
   const [time, setTime] = useState(null);
   const [showPickerTime, setShowPickerTime] = useState(false);
   const [NumPpl, setNumPpl] = useState('');
-  const [phoneNumber, setphoneNumber] = useState('');
   const [place, setPlace] = useState('');
   const [comment, setComment] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -32,6 +32,7 @@ const BookingForm = ({ navigation }) => {
           setFirstName(userData.firstName);
           setLastName(userData.lastName);
           setEmail(userData.email);
+          setPhone(userData.phone);
         } else {
           console.log('No such document!');
         }
@@ -233,7 +234,7 @@ const BookingForm = ({ navigation }) => {
               </View>
               <View style={styles.nameInputContainer}>
                 <Text style={styles.label}>Phone Number:</Text>
-                <TextInput style={styles.input} value={phoneNumber} onChangeText={setphoneNumber} placeholder='09123456789' placeholderTextColor="#11182744"/>
+                <TextInput style={styles.input} value={phone} onChangeText={setphone} placeholder='09123456789' placeholderTextColor="#11182744"/>
               </View>
             </View>
 

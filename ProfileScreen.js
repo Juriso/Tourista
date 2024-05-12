@@ -1,18 +1,64 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Text, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, StyleSheet, Text, Image, Button } from 'react-native';
+import { getFirestore, collection, addDoc, getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { db, auth, firestore } from './firebaseConfig';
+import HomeScreen from './HomeScreen';
 
 ProfileScreen = () => {
-  [firstName, setFirstName] = useState('Julius Alvin');
-  [lastName, setLastName] = useState('Baquiran');
-  [email, setEmail] = useState('couchpotato@gmail.com');
-  [phone, setPhone] = useState('09925585065');
-  [password, setPassword] = useState('**********');
+  [firstName, setFirstName] = useState('');
+  [lastName, setLastName] = useState('');
+  [email, setEmail] = useState('');
+  [phone, setPhone] = useState('');
+  [profilePicUrl, setProfilePicUrl] = useState('');
+  // [password, setPassword] = useState('**********');
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          console.log('User data:', userData);
+          setFirstName(userData.firstName);
+          setLastName(userData.lastName);
+          // setEmail(userData.email);
+          setPhone(userData.phone);
+          if (userData.profile_pic) {
+            setProfilePicUrl(userData.profile_pic);
+          }
+        } else {
+          console.log('No such document!');
+        }
+      } else {
+        console.log('No user signed in!');
+      }
+    };
+    fetchUserData();
+  }, []);
+
+
+  handleUpdateUserInfo = async () => {
+    try {
+      // Add user data to Firestore 
+      const userData = {
+        firstName: firstName,
+        lastName: lastName,
+        // email: email,
+        phone: phone,
+  
+      };
+      await updateDoc(doc(firestore, 'users', auth.currentUser.uid), userData);
+    } catch (error) {
+      console.error('Error updating user info: ', error);
+    }
+  }
 
   return (
     <>
       <View style={styles.profileContainer}>
         <View style={styles.profilePicBackgroundContainer} />
-        <Image style={styles.avatar} source={require('./assets/images/profile_pic.png')} />
+        <Image style={styles.avatar} source={{uri: profilePicUrl}} />
       </View>
       <View style={styles.container}>
         <Text style={styles.label}>First Name</Text>
@@ -27,11 +73,11 @@ ProfileScreen = () => {
            value={lastName}
            editable={true}
            onChangeText={text => setLastName(text)} />
-         <Text style={styles.label}>Email</Text>
+         { /* <Text style={styles.label}>Email</Text>
         <TextInput
           style={styles.input}
           value={email}
-          onChangeText={text => setEmail(text)} />
+          onChangeText={text => setEmail(text)} /> */ }
          <Text style={styles.label}>Phone</Text>
         <TextInput
           style={styles.input}
@@ -44,6 +90,7 @@ ProfileScreen = () => {
           value={password}
            onChangeText={text => setPassword(text)}
            secureTextEntry /> */}
+           <Button title="Submit" style={styles.submit} onPress={handleUpdateUserInfo} />
       </View>
     </>
   );
@@ -88,5 +135,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     paddingHorizontal: 10,
   },
+  submit: {
+    marginTop: 20
+  }
 });
 export default ProfileScreen;
