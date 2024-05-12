@@ -15,6 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // Add event listener for email verification
 auth.onAuthStateChanged(user => {
@@ -23,4 +24,4 @@ auth.onAuthStateChanged(user => {
   }
 });
 
-export { app, firestore, auth };
+export { app, firestore, auth, db };
