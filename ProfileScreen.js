@@ -1,41 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, StyleSheet, Text, Image, Button } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import { getFirestore, collection, addDoc, getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
 import { db, auth, firestore } from './firebaseConfig';
-import HomeScreen from './HomeScreen';
 
 ProfileScreen = () => {
-  [firstName, setFirstName] = useState('');
-  [lastName, setLastName] = useState('');
-  [email, setEmail] = useState('');
-  [phone, setPhone] = useState('');
-  [profilePicUrl, setProfilePicUrl] = useState('');
+  const isFocused = useIsFocused(); // Hook to check if screen is focused
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [profilePicUrl, setProfilePicUrl] = useState('');
   // [password, setPassword] = useState('**********');
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          console.log('User data:', userData);
-          setFirstName(userData.firstName);
-          setLastName(userData.lastName);
-          // setEmail(userData.email);
-          setPhone(userData.phone);
-          if (userData.profile_pic) {
-            setProfilePicUrl(userData.profile_pic);
-          }
-        } else {
-          console.log('No such document!');
+  const fetchUserData = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        console.log('User data:', userData);
+        setFirstName(userData.firstName);
+        setLastName(userData.lastName);
+        // setEmail(userData.email);
+        setPhone(userData.phone);
+        if (userData.profile_pic) {
+          setProfilePicUrl(userData.profile_pic);
         }
       } else {
-        console.log('No user signed in!');
+        console.log('No such document!');
       }
-    };
+    } else {
+      console.log('No user signed in!');
+    }
+  };
+
+  useEffect(() => {
     fetchUserData();
-  }, []);
+
+    if (isFocused) {
+      fetchUserData();
+    }
+  }, [isFocused]);
 
 
   handleUpdateUserInfo = async () => {
@@ -71,7 +77,6 @@ ProfileScreen = () => {
         <TextInput
           style={styles.input}
            value={lastName}
-           editable={true}
            onChangeText={text => setLastName(text)} />
          { /* <Text style={styles.label}>Email</Text>
         <TextInput
