@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { getFirestore, collection, addDoc, getDoc, doc } from 'firebase/firestore';
 import { db, auth } from './firebaseConfig';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  [searchText, setSearchText] = useState('');
-  [firstName, setFirstName] = useState('');
-  [profilePicUrl, setProfilePicUrl] = useState('https://firebasestorage.googleapis.com/v0/b/cloudfinalproj-85441.appspot.com/o/profile_pics%2Fno_profile_pic.png?alt=media');
+  const isFocused = useIsFocused(); // Hook to check if screen is focused
+  const [searchText, setSearchText] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [profilePicUrl, setProfilePicUrl] = useState('https://firebasestorage.googleapis.com/v0/b/cloudfinalproj-85441.appspot.com/o/profile_pics%2Fno_profile_pic.png?alt=media');
 
   const handleCarouselItemPress = (itemName) => {
     switch (itemName) {
@@ -47,28 +48,34 @@ const HomeScreen = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          console.log('User data:', userData);
-          setFirstName(userData.firstName);
-          if (userData.profile_pic) {
-            setProfilePicUrl(userData.profile_pic);
-          }
-        } else {
-          console.log('No such document!');
+  const fetchUserData = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        console.log('User data:', userData);
+        setFirstName(userData.firstName);
+        if (userData.profile_pic) {
+          setProfilePicUrl(userData.profile_pic);
         }
       } else {
-        console.log('No user signed in!');
+        console.log('No such document!');
       }
-    };
+    } else {
+      console.log('No user signed in!');
+    }
+  };
 
+  useEffect(() => {
     fetchUserData();
-  }, []);
+
+    if (isFocused) {
+      fetchUserData();
+    }
+  }, [isFocused]);
+
+
   const handleSeeAllPress = () => {
     navigation.navigate('Locations');
   };
