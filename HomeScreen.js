@@ -54,7 +54,6 @@ const HomeScreen = () => {
       const userDoc = await getDoc(doc(db, 'users', user.uid));
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        console.log('User data:', userData);
         setFirstName(userData.firstName);
         if (userData.profile_pic) {
           setProfilePicUrl(userData.profile_pic);
