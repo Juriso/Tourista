@@ -1,44 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, StyleSheet, Text, Image, Button, Alert, TouchableOpacity } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { getFirestore, collection, addDoc, getDoc, doc, setDoc, updateDoc } from 'firebase/firestore';
-import { db, auth, firestore } from './firebaseConfig';
+import { db, auth, firestore, storage } from './firebaseConfig';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Import ref, uploadBytes, and getDownloadURL
+import Toast from 'react-native-toast-message';
+import { profile } from '@tensorflow/tfjs';
+import { set } from 'firebase/database';
 
 ProfileScreen = () => {
-  [firstName, setFirstName] = useState('');
-  [lastName, setLastName] = useState('');
-  [email, setEmail] = useState('');
-  [phone, setPhone] = useState('');
-  [profilePicUrl, setProfilePicUrl] = useState('');
+  const isFocused = useIsFocused(); // Hook to check if screen is focused
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [profilePicUrl, setProfilePicUrl] = useState('');
   // [password, setPassword] = useState('**********');
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          console.log('User data:', userData);
-          setFirstName(userData.firstName);
-          setLastName(userData.lastName);
-          // setEmail(userData.email);
-          setPhone(userData.phone);
-          if (userData.profile_pic) {
-            setProfilePicUrl(userData.profile_pic);
-          }
-        } else {
-          console.log('No such document!');
+  const fetchUserData = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        setFirstName(userData.firstName);
+        setLastName(userData.lastName);
+        // setEmail(userData.email);
+        setPhone(userData.phone);
+        if (userData.profile_pic) {
+          setProfilePicUrl(userData.profile_pic);
         }
       } else {
-        console.log('No user signed in!');
+        console.log('No such document!');
       }
-    };
+    } else {
+      console.log('No user signed in!');
+    }
+  };
+
+  useEffect(() => {
     fetchUserData();
+    if (isFocused) {
+      fetchUserData();
+    }
   }, []);
 
 
   handleUpdateUserInfo = async () => {
+    Toast.show({
+      type: 'info',
+      text1: 'Updating Info',
+      text2: 'Updating Info. Please wait!',
+    });
     try {
       // Add user data to Firestore 
       const userData = {
@@ -49,10 +63,68 @@ ProfileScreen = () => {
   
       };
       await updateDoc(doc(firestore, 'users', auth.currentUser.uid), userData);
+      Toast.show({
+        type: 'success',
+        text1: 'Updating done',
+        text2: 'Updated info successfully!',
+      });
     } catch (error) {
       console.error('Error updating user info: ', error);
+      Toast.show({
+        type: 'failed',
+        text1: 'Updating failed',
+        text2: 'Updating info failed',
+      });
     }
   }
+
+  const changeProfilePicture = async (imageUri) => {
+    try {
+      const uploadedImage = await uploadImageToFirebase(imageUri);
+      console.log("Download URL in profile function: " + uploadedImage);
+      if (uploadedImage) {
+        const userData = {
+          profile_pic: uploadedImage
+        };
+        await updateDoc(doc(firestore, 'users', auth.currentUser.uid), userData);
+        Toast.show({
+          type: 'success',
+          text1: 'Profile Updated',
+          text2: 'Profile picture updated successfully!',
+        });
+        setProfilePicUrl(uploadedImage);
+      }
+    } catch (error) {
+      console.error('Error updating profile picture: ', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Upload Failed',
+        text2: 'Failed to update the profile picture',
+      });
+    }
+  }
+
+  const uploadImageToFirebase = async (imageUri) => {
+    Toast.show({
+      type: 'info',
+      text1: 'Uploading',
+      text2: 'Uploading image. Please wait.',
+    });
+    try {
+      const fileExtension = imageUri.split('.').pop();
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+      const storageRef = ref(storage, 'profile_pics/' + auth.currentUser.uid + "." + fileExtension ); // Use ref function with storage object
+      await uploadBytes(storageRef, blob); // Upload the blob to the storage reference
+      console.log('Image uploaded successfully!');
+      const downloadUrl = await getDownloadURL(storageRef); // Get the download URL for the uploaded image
+      console.log('Download URL:', downloadUrl);
+      return downloadUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    }
+  };
 
 
   const handleProfilePicPress = async () => {
@@ -91,10 +163,8 @@ ProfileScreen = () => {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
-      // Handle the selected image
+      changeProfilePicture(result.assets[0].uri);
     }
   };
 
@@ -112,10 +182,9 @@ ProfileScreen = () => {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.cancelled) {
-      // Handle the captured photo
+      changeProfilePicture(result.assets[0].uri);
     }
   };
 
@@ -123,7 +192,7 @@ ProfileScreen = () => {
     <>
       <View style={styles.profileContainer}>
         <View style={styles.profilePicBackgroundContainer} />
-        <TouchableOpacity onPress={handleProfilePicturePress}>
+        <TouchableOpacity onPress={handleProfilePicPress}>
         <Image style={styles.avatar} source={{uri: profilePicUrl}} />
         </TouchableOpacity>
       </View>

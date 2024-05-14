@@ -21,6 +21,7 @@ import Locations from './Locations';
 import BookingForm from './BookingForm';
 import { AppProvider } from './AppContext';
 import { LogBox } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 LogBox.ignoreAllLogs();
 
@@ -155,6 +156,7 @@ const App = () => {
             }}
           />
         </Stack.Navigator>
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </NavigationContainer>
     </AppProvider>
   );
