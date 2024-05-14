@@ -49,7 +49,7 @@ const SignInPage = ({ navigation }) => {
       navigation.navigate('MainScreen');
     } catch (error) {
       console.error('Error signing in: ', error);
-      if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+      if (error.code.match('auth/invalid-credential') || error.code.match('auth/user-not-found') || error.code.match('auth/missing-password')) {
         Alert.alert(
           'Incorrect Credentials',
           'The email or password provided is incorrect. Please try again.'
