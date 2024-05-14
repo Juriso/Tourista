@@ -11,12 +11,12 @@ const BookingForm = ({ navigation }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [date, setDate] = useState(null);
   const [showPickerDate, setShowPickerDate] = useState(false);
   const [time, setTime] = useState(null);
   const [showPickerTime, setShowPickerTime] = useState(false);
   const [NumPpl, setNumPpl] = useState('');
+  const [phone, setPhone] = useState('');
   const [place, setPlace] = useState('');
   const [comment, setComment] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -65,7 +65,7 @@ const BookingForm = ({ navigation }) => {
       isValid = false;
     };
 
-    if(!phoneNumber.match(/^[0-9]{11}$/)){
+    if(!phone.match(/^[0-9]{11}$/)){
       alert('Please input a valid Phone Number');
       isValid = false;
     };
@@ -114,7 +114,7 @@ const BookingForm = ({ navigation }) => {
         date,
         time,
         NumPpl,
-        phoneNumber,
+        phone,
         place,
         comment,
       });
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   closeButton: {
-    backgroundColor: '#A7C7E7',
+    backgroundColor: '#F79F25',
     padding: 7,
     width: 130, 
     borderRadius: 5,
