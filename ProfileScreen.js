@@ -15,7 +15,7 @@ ProfileScreen = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [profilePicUrl, setProfilePicUrl] = useState('');
+  const [profilePicUrl, setProfilePicUrl] = useState('https://firebasestorage.googleapis.com/v0/b/cloudfinalproj-85441.appspot.com/o/profile_pics%2Fno_profile_pic.png?alt=media');
   // [password, setPassword] = useState('**********');
 
   const fetchUserData = async () => {
