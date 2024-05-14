@@ -27,7 +27,7 @@ const SignInPage = ({ navigation }) => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       if (!auth.currentUser.emailVerified) {
         Alert.alert(
-          'Email not verifed',
+          'Email not verified',
           'The email registered hasn\'t verified yet.\nNo email received? Check your spam folder or click "Resend" to send it again',
           [
             {
