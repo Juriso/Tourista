@@ -19,11 +19,4 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// Add event listener for email verification
-auth.onAuthStateChanged(user => {
-  if (user) {
-    sendEmailVerification(auth.currentUser);
-  }
-});
-
 export { app, firestore, auth, db, storage };

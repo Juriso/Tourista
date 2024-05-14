@@ -3,10 +3,11 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Dimensions, Alert, Modal, Button } from 'react-native';
 import styles from './SignInPageStyles';
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from 'firebase/auth';
 import { auth } from './firebaseConfig';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { firestore } from './firebaseConfig';
+
 
 const SignInPage = ({ navigation }) => {
   const screenWidth = Dimensions.get('window').width;
@@ -24,7 +25,27 @@ const SignInPage = ({ navigation }) => {
   const handleLogIn = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  
+      if (!auth.currentUser.emailVerified) {
+        Alert.alert(
+          'Email not verifed',
+          'The email registered hasn\'t verified yet.\nNo email received? Check your spam folder or click "Resend" to send it again',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed')
+            },
+            {
+              text: 'Resend',
+              onPress: () => {
+                sendEmailVerification(auth.currentUser);
+                signOut(auth.currentUser);
+              }
+            }
+          ]
+        );
+        return;
+      }
+
       const userQuery = query(collection(firestore, 'users'), where('email', '==', email));
       const querySnapshot = await getDocs(userQuery);
       if (querySnapshot.empty) {
