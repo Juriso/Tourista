@@ -234,7 +234,7 @@ const BookingForm = ({ navigation }) => {
               </View>
               <View style={styles.nameInputContainer}>
                 <Text style={styles.label}>Phone Number:</Text>
-                <TextInput style={styles.input} value={phone} onChangeText={setphone} placeholder='09123456789' placeholderTextColor="#11182744"/>
+                <TextInput style={styles.input} value={phone} onChangeText={setPhone} placeholder='09123456789' placeholderTextColor="#11182744"/>
               </View>
             </View>
 
