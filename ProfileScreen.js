@@ -48,6 +48,42 @@ ProfileScreen = () => {
 
 
   handleUpdateUserInfo = async () => {
+    if (firstName === "") {
+      Toast.show({
+        type: 'error',
+        text1: 'Updating failed',
+        text2: 'First name must not be empty',
+      });
+      return;
+    }
+
+    if (lastName === "") {
+      Toast.show({
+        type: 'error',
+        text1: 'Updating failed',
+        text2: 'Last name must not be empty',
+      });
+      return;
+    }
+
+    if (phone === "") {
+      Toast.show({
+        type: 'error',
+        text1: 'Updating failed',
+        text2: 'Phone number must not be empty',
+      });
+      return;
+    }
+
+    if (phone.match(/[^+\d]+/g) || (phone.charAt(0) === "0" && phone.length != 11) || (phone.substring(0, 3) === "+63" && phone.length != 13)) {
+      Toast.show({
+        type: 'error',
+        text1: 'Updating failed',
+        text2: 'Phone number must be valid',
+      });
+      return;
+    }
+
     Toast.show({
       type: 'info',
       text1: 'Updating Info',
