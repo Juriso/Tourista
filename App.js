@@ -7,6 +7,7 @@ import SignInPage from './SignInPage';
 import CreateAccountPage from './CreateAccountPage';
 import HomeScreen from './HomeScreen';
 import MainScreen from './MainScreen'; // Import the MainScreen component
+import Admin from './Admin.js';
 import Place1 from './Place1';
 import Place2 from './Place2';
 import Place3 from './Place3';
@@ -84,6 +85,13 @@ const App = () => {
           <Stack.Screen
             name="MainScreen"
             component={MainScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Admin"
+            component={Admin}
             options={{
               headerShown: false,
             }}

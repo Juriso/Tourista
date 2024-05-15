@@ -5,8 +5,8 @@ import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Dimensions,
 import styles from './SignInPageStyles';
 import { signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from 'firebase/auth';
 import { auth } from './firebaseConfig';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { firestore } from './firebaseConfig';
+import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
+import { firestore, db } from './firebaseConfig';
 
 
 const SignInPage = ({ navigation }) => {
@@ -66,8 +66,27 @@ const SignInPage = ({ navigation }) => {
         );
         return;
       }
-  
-      navigation.navigate('MainScreen');
+
+      const user = auth.currentUser;
+      let userType;
+      if (user) {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+           userType = userData.user_type;
+        } else {
+          console.log('No such document!');
+        }
+      } else {
+        console.log('No user signed in!');
+      }
+
+      if (userType === 'admin') {
+        navigation.navigate('Admin');
+      } else {
+        navigation.navigate('MainScreen');
+      }
+
     } catch (error) {
       console.error('Error signing in: ', error);
       if (error.code.match('auth/invalid-credential') || error.code.match('auth/user-not-found') || error.code.match('auth/missing-password')) {
