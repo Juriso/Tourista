@@ -38,6 +38,54 @@ const Locations = () => {
       case 'The Sunken Garden':
         navigation.navigate('Place10', { placeName: 'The Sunken Garden'});
         break;
+        case 'Gateway Mall':
+        navigation.navigate('Place11', { placeName: 'Gateway Mall'});
+        break;
+        case 'Vargas Museum':
+        navigation.navigate('Place12', { placeName: 'Vargas Museum'});
+        break;
+        case 'Parish of the Holy Sacrifice Church':
+        navigation.navigate('Place13', { placeName: 'Parish of the Holy Sacrifice Church'});
+        break;
+        case 'Ateneo Art Gallery':
+        navigation.navigate('Place14', { placeName: 'Ateneo Art Gallery'});
+        break;
+        case 'Bantayog ng mga Bayani':
+        navigation.navigate('Place15', { placeName: 'Bantayog ng mga Bayani'});
+        break;
+        case 'Manila Ocean Park':
+        navigation.navigate('Place16', { placeName: 'Manila Ocean Park'});
+        break;
+        case 'Banawe Street':
+        navigation.navigate('Place17', { placeName: 'Banawe Street'});
+        break;
+        case 'Ninoy Aquino Parks and Wildlife Center':
+        navigation.navigate('Place18', { placeName: 'Ninoy Aquino Parks and Wildlife Center'});
+        break;
+        case 'Ayala Malls TriNoma':
+        navigation.navigate('Place19', { placeName: 'Ayala Malls TriNoma'});
+        break;
+        case 'Eastwood City':
+        navigation.navigate('Place20', { placeName: 'Eastwood City'});
+        break;
+        case 'La Mesa Watershed':
+        navigation.navigate('Place21', { placeName: 'La Mesa Watershed'});
+        break;
+        case 'SM North EDSA Sky Dome':
+        navigation.navigate('Place22', { placeName: 'SM North EDSA Sky Dome'});
+        break;
+        case 'PBB House':
+        navigation.navigate('Place23', { placeName: 'PBB House'});
+        break;
+        case 'Neopolitan Business Park':
+        navigation.navigate('Place24', { placeName: 'Neopolitan Business Park'});
+        break;
+        case 'U.P. Town Center':
+        navigation.navigate('Place25', { placeName: 'U.P. Town Center'});
+        break;
+        case 'Iglesia Ni Cristo Museum':
+        navigation.navigate('Place26', { placeName: 'Iglesia Ni Cristo Museum'});
+        break;
       default:
         break;
     }
@@ -80,7 +128,7 @@ const Locations = () => {
   );
 };
 
-const locations = ['Quezon Memorial Circle', 'Art in Island', 'La Mesa Ecopark', 'Smart Araneta Coliseum', 'Real Monasterio ​de Santa Clara de Manila', 'Sining Kamalig', 'Minor Basilica', 'Archdiocesan Shrine of Mary', 'Santo Domingo Church', 'The Sunken Garden' ];
+const locations = ['Quezon Memorial Circle', 'Art in Island', 'La Mesa Ecopark', 'Smart Araneta Coliseum', 'Real Monasterio ​de Santa Clara de Manila', 'Sining Kamalig', 'Minor Basilica', 'Archdiocesan Shrine of Mary', 'Santo Domingo Church', 'The Sunken Garden','Gateway Mall','Vargas Museum','Parish of the Holy Sacrifice Church','Ateneo Art Gallery','Bantayog ng mga Bayani','Manila Ocean Park','Banawe Street','Ninoy Aquino Parks and Wildlife Center','Ayala Malls TriNoma','Eastwood City','La Mesa Watershed','SM North EDSA Sky Dome','PBB House','Neopolitan Business Park','U.P. Town Center','Iglesia Ni Cristo Museum'];
 const locationImages = {
   'Quezon Memorial Circle': require('./assets/images/circle.jpg'),
   'Art in Island': require('./assets/images/Art.jpg'),
@@ -92,6 +140,23 @@ const locationImages = {
   'Archdiocesan Shrine of Mary': require('./assets/images/mary.jpg'),
   'Santo Domingo Church': require('./assets/images/Santo.jpg'),
   'The Sunken Garden': require('./assets/images/UP.jpg'),
+  'Gateway Mall': require('./assets/images/Gateway Mall.jpg'),
+  'Vargas Museum': require('./assets/images/Vargas Museum.jpg'),
+  'Parish of the Holy Sacrifice Church': require('./assets/images/Parish of the Holy Sacrifice Church.jpg'),
+  'Ateneo Art Gallery': require('./assets/images/Ateneo Art Gallery.jpg'),
+  'Bantayog ng mga Bayani': require('./assets/images/Bantayog ng mga Bayani.jpg'),
+  'Manila Ocean Park': require('./assets/images/Manila Ocean Park.jpg'),
+  'Banawe Street': require('./assets/images/Banawe Street.jpg'),
+  'Ninoy Aquino Parks and Wildlife Center': require('./assets/images/Ninoy Aquino Parks and Wildlife Center.png'),
+  'Ayala Malls TriNoma': require('./assets/images/Ayala Malls  TriNoma.jpg'),
+  'Eastwood City': require('./assets/images/Eastwood City.jpg'),
+  'La Mesa Watershed': require('./assets/images/La Mesa Watershed.jpg'),
+  'SM North EDSA Sky Dome': require('./assets/images/SM North EDSA Sky Dome.jpg'),
+  'PBB House': require('./assets/images/PBB House.jpg'),
+  'Neopolitan Business Park': require('./assets/images/Neopolitan Business Park.jpg'),
+  'U.P. Town Center': require('./assets/images/U.P. Town Center.jpg'),
+  'Iglesia Ni Cristo Museum': require('./assets/images/Iglesia Ni Cristo Museum.jpg'),
+
 };
 
 const styles = StyleSheet.create({
@@ -100,7 +165,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 20,
-    paddingBottom: 100, // Adjusted padding to accommodate the back button
+    paddingBottom: 100, 
   },
   searchContainer: {
     flexDirection: 'row',
@@ -114,15 +179,15 @@ const styles = StyleSheet.create({
     height: 20,
     position: 'absolute',
     left: 10,
-    zIndex: 1, // Ensure the icon is above the input field
+    zIndex: 1, 
   },
   searchInput: {
     flex: 1,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    paddingLeft: 35, // Adjusted padding to accommodate the search icon
-    paddingRight: 10, // Adjusted padding to accommodate the search icon
+    paddingLeft: 35, 
+    paddingRight: 10, 
     paddingVertical: 8,
   },
   locationsContainer: {
@@ -130,8 +195,8 @@ const styles = StyleSheet.create({
   },
   locationItem: {
     marginBottom: 20,
-    borderRadius: 10, // Rounded corners for the location image container
-    overflow: 'hidden', // Ensure the text inside doesn't overflow the container
+    borderRadius: 10, 
+    overflow: 'hidden', 
   },
   locationImage: {
     width: '100%',
@@ -140,7 +205,7 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: 16,
     fontWeight: 'bold',
-    backgroundColor: 'rgba(0,0,0,0.5)', // Transparent background
+    backgroundColor: 'rgba(0,0,0,0.5)', 
     padding: 5,
     textAlign: 'center',
     color: '#fff',

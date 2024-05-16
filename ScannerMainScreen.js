@@ -1,66 +1,86 @@
-// ScannerMainScreen.js
-
-import React, { useState } from 'react';
-import { View, Image, Button, Modal, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { BlurView } from 'expo-blur';
+import React, { useState, useEffect } from 'react';
+import { View, Image, TouchableOpacity, Text, Modal, Button, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { styles } from './ScannerScreenStyles';
+import * as ImagePicker from 'expo-image-picker';
 
 const ScannerMainScreen = () => {
   const navigation = useNavigation();
-  const [showModal, setShowModal] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  const handleOpenStreetSpot = () => {
-    setShowModal(true);
+  useEffect(() => {
+    (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission denied', 'You need to enable gallery access to upload images.');
+      }
+    })();
+  }, []);
+
+  const handleCameraScreen = () => {
+    navigation.replace('CameraScreen');
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
   };
 
-  const handleOptionSelection = (option) => {
-    setShowModal(false);
-    if (option === 'camera') {
-      navigation.replace('CameraScreen'); // Use replace instead of navigate
-    } else if (option === 'gallery') {
-      navigation.navigate('ImagePickerScreen');
+  const pickImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      if (!result.cancelled) {
+        setSelectedImage(result.uri);
+        navigation.navigate('ImagePreviewScreen', { imageUri: result.uri }); // Navigate to ImagePreviewScreen with the selected image URI
+      }
+    } catch (error) {
+      console.log('Error while picking image:', error);
     }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.box}>
-        <Image source={require('./assets/images/street-spot-logo.png')} style={[styles.logo, styles.orangeBackground]} />
-        <Button title="Open StreetSpot" onPress={handleOpenStreetSpot} style={[styles.button, styles.orangeBackground]} />
-      </View>
+      <TouchableOpacity style={styles.infoButton} onPress={toggleModal}>
+        <View style={styles.infoButtonContainer}>
+          <Ionicons name="ios-help-circle-outline" size={24} color="#FFA500" />
+        </View>
+      </TouchableOpacity>
+      <Image source={require('./assets/images/street-spot-logo.png')} style={styles.logo} />
+      <TouchableOpacity style={styles.button} onPress={handleCameraScreen}>
+        <Text style={styles.buttonText}>Take Picture</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.button, styles.buttonMargin]} onPress={pickImage}>
+        <Text style={styles.buttonText}>Select Image</Text>
+      </TouchableOpacity>
 
       <Modal
-        visible={showModal}
+        visible={modalVisible}
         transparent={true}
-        animationType="fade"
-        onRequestClose={handleCloseModal}
+        animationType="slide"
+        onRequestClose={toggleModal}
       >
-        <BlurView intensity={90} tint="dark" style={StyleSheet.absoluteFill}>
+        <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
-            <View style={styles.modalBox}>
-              <TouchableOpacity style={styles.closeButton} onPress={handleCloseModal}>
-                <Ionicons name="close" size={24} color="white" />
-              </TouchableOpacity>
-              <View style={styles.modalContent}>
-                <Text style={styles.modalText}>Choose an option</Text>
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity style={[styles.modalButton, styles.orangeBackground, styles.buttonMargin]} onPress={() => handleOptionSelection('camera')}>
-                    <Text style={styles.modalButtonText}>Take an Image</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={[styles.modalButton, styles.orangeBackground, styles.buttonMargin]} onPress={() => handleOptionSelection('gallery')}>
-                    <Text style={styles.modalButtonText}>Upload Image</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
+            {selectedImage ? (
+              <Image source={{ uri: selectedImage }} style={{ width: '100%', height: '100%' }} />
+            ) : (
+              <Text style={styles.modalText}>
+                <Text style={{fontWeight: "bold"}}>How does it work? {"\n"}{"\n"}</Text>
+                1.   Hold the camera towards the street food item you're curious about.{"\n"}{"\n"}
+                2.  Capture it and let StreetSpot work its magic!
+              </Text>
+            )}
+            <TouchableOpacity onPress={toggleModal} style={styles.closeModalButton}>
+              <Text style={styles.closeModalButtonText}>Close</Text>
+            </TouchableOpacity>
           </View>
-        </BlurView>
+        </View>
       </Modal>
     </View>
   );

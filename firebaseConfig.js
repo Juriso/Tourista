@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth, sendEmailVerification } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAM5lpELvwI1xnd1KRlzly3Wzr-4sCA6xU",
@@ -15,12 +16,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-// Add event listener for email verification
-auth.onAuthStateChanged(user => {
-  if (user) {
-    sendEmailVerification(auth.currentUser);
-  }
-});
-
-export { app, firestore, auth };
+export { app, firestore, auth, db, storage };

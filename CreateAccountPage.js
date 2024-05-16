@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { sendEmailVerification } from 'firebase/auth';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, setDoc} from 'firebase/firestore'; 
 import { Snackbar } from 'react-native-paper';
 import { firestore, auth } from './firebaseConfig';
 import styles from './CreateAccountPageStyles';
@@ -89,6 +89,9 @@ const CreateAccountPage = ({ navigation }) => {
     try {
       // Create user account
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Get the user ID from the user credential 
+      const userId = userCredential.user.uid;
   
       // Send email verification
       await sendEmailVerification(auth.currentUser);
@@ -97,13 +100,15 @@ const CreateAccountPage = ({ navigation }) => {
       setSnackbarMessage('Your account has been successfully created. Please check your email for verification.');
       setSnackbarVisible(true);
   
-      // Add user data to Firestore
-      await addDoc(collection(firestore, 'users'), {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-      });
-  
+      // Add user data to Firestore 
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        phone: "",
+        profile_pic: "https://firebasestorage.googleapis.com/v0/b/cloudfinalproj-85441.appspot.com/o/profile_pics%2Fno_profile_pic.png?alt=media"
+      };
+      await setDoc(doc(firestore, 'users', userId), userData);
       // Navigate to SignInPage upon successful account creation
       navigation.navigate('SignInPage'); // Updated navigation here
     } catch (error) {

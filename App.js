@@ -7,6 +7,7 @@ import SignInPage from './SignInPage';
 import CreateAccountPage from './CreateAccountPage';
 import HomeScreen from './HomeScreen';
 import MainScreen from './MainScreen'; // Import the MainScreen component
+import Admin from './Admin.js';
 import Place1 from './Place1';
 import Place2 from './Place2';
 import Place3 from './Place3';
@@ -17,10 +18,28 @@ import Place7 from './Place7';
 import Place8 from './Place8';
 import Place9 from './Place9';
 import Place10 from './Place10';
+import Place11 from './Place11';
+import Place12 from './Place12';
+import Place13 from './Place13';
+import Place14 from './Place14';
+import Place15 from './Place15';
+import Place16 from './Place16';
+import Place17 from './Place17';
+import Place18 from './Place18';
+import Place19 from './Place19';
+import Place20 from './Place20';
+import Place21 from './Place21';
+import Place22 from './Place22';
+import Place23 from './Place23';
+import Place24 from './Place24';
+import Place25 from './Place25';
+import Place26 from './Place26';
+
 import Locations from './Locations';
 import BookingForm from './BookingForm';
 import { AppProvider } from './AppContext';
 import { LogBox } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 LogBox.ignoreAllLogs();
 
@@ -66,6 +85,13 @@ const App = () => {
           <Stack.Screen
             name="MainScreen"
             component={MainScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Admin"
+            component={Admin}
             options={{
               headerShown: false,
             }}
@@ -140,6 +166,118 @@ const App = () => {
               headerShown: false,
             }}
           />
+            <Stack.Screen
+            name="Place11"
+            component={Place11}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place12"
+            component={Place12}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place13"
+            component={Place13}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place14"
+            component={Place14}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place15"
+            component={Place15}
+            options={{
+              headerShown: false,
+            }}
+          />
+            <Stack.Screen
+            name="Place16"
+            component={Place16}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place17"
+            component={Place17}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place18"
+            component={Place18}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place19"
+            component={Place19}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place20"
+            component={Place20}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place21"
+            component={Place21}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place22"
+            component={Place22}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place23"
+            component={Place23}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place24"
+            component={Place24}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place25"
+            component={Place25}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Place26"
+            component={Place26}
+            options={{
+              headerShown: false,
+            }}
+          />
           <Stack.Screen
             name="Locations"
             component={Locations}
@@ -155,6 +293,7 @@ const App = () => {
             }}
           />
         </Stack.Navigator>
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </NavigationContainer>
     </AppProvider>
   );

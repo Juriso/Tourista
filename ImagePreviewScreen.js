@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, Text, ActivityIndicator, Button } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity, Text, ActivityIndicator, Button } from 'react-native';
 import { bundleResourceIO, decodeJpeg } from '@tensorflow/tfjs-react-native';
 import * as tf from '@tensorflow/tfjs';
 
@@ -7,6 +7,7 @@ import * as FileSystem from 'expo-file-system';
 
 const modelJson = require('./assets/models/model.json');
 const weightsBin = require('./assets/models/weights.bin');
+const logoImage = require('./assets/images/street-spot-logo.png');
 
 const classNames = ['Turon', 'Carioca', 'Fishball', 'Isaw', 'Kikiam', 'Kwekkwek', 'Maruya', 'Cheese-Stick', 'Dos', 'Tres'];
 
@@ -101,27 +102,30 @@ const ImagePreviewScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Image source={logoImage} style={styles.logo} />
       <View style={styles.imageContainer}>
         <Image source={{ uri: photoUri }} style={styles.image} />
       </View>
       <View style={styles.predictionsContainer}>
-        <Text style={styles.predictionsText}>This Filipino Street Food is:</Text>
+        <Text style={styles.predictionsText}>Filipino Street Food:</Text>
         {isLoading ? (
-          <ActivityIndicator size="large" color="#0000ff" /> // Show loading indicator while processing
+          <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           <>
             <Text style={styles.prediction}>
-              <Text style={styles.boldText}>{`Highest Prediction: `}</Text>
               <Text style={styles.className}>{getHighestPredictionClassName()}</Text>
             </Text>
+            <Text style={styles.predictionsText}>{"\n"}{"\n"}Description:</Text>
             <Text style={styles.description}>{getDescription()}</Text>
           </>
         )}
         <View style={styles.buttonContainer}>
-          <Button title="Take Another Image" onPress={() => navigation.navigate('CameraScreen')} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button title="Exit Scanner" onPress={() => navigation.navigate('ScannerMain')} />
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('CameraScreen')}>
+            <Text style={styles.buttonText}>Take Another Picture</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeScreen')}>
+            <Text style={styles.buttonText}>Go Home</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -131,9 +135,15 @@ const ImagePreviewScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0', // Background color for the container
+    backgroundColor: '#FFE799', // Changed background color
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    marginBottom: 20,
   },
   imageContainer: {
     width: 200,
@@ -148,7 +158,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: undefined,
     height: undefined,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   predictionsContainer: {
     marginTop: 20,
@@ -157,27 +167,37 @@ const styles = StyleSheet.create({
   predictionsText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10, // Margin bottom for the Predictions text
   },
   prediction: {
     fontSize: 16,
     marginVertical: 5,
     textAlign: 'center',
   },
-  boldText: {
-    fontWeight: 'bold',
-  },
   className: {
-    fontSize: 18, // Increased font size for the class name
-    fontWeight: 'bold', // Bold format for the class name
+    fontSize: 16,
   },
   description: {
-    marginHorizontal: 20, // Left and right margin for the description
-    marginTop: 10, // Margin top for the description
-    textAlign: 'center', // Center alignment for the description
+    marginHorizontal: 20,
+    padding: 10,
+    textAlign: 'justify',
   },
   buttonContainer: {
-    marginTop: 20, // Margin top for the button container
+    marginTop: 20,
+    width: 200,
+    color: '#2D2D2D',
+  },
+  button: {
+    backgroundColor: '#F79F25',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#2D2D2D',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 16,
+    textTransform: 'none',
   },
 });
 

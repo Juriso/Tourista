@@ -3,10 +3,11 @@
 import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Dimensions, Alert, Modal, Button } from 'react-native';
 import styles from './SignInPageStyles';
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from 'firebase/auth';
 import { auth } from './firebaseConfig';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { firestore } from './firebaseConfig';
+import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
+import { firestore, db } from './firebaseConfig';
+
 
 const SignInPage = ({ navigation }) => {
   const screenWidth = Dimensions.get('window').width;
@@ -24,7 +25,27 @@ const SignInPage = ({ navigation }) => {
   const handleLogIn = async () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  
+      if (!auth.currentUser.emailVerified) {
+        Alert.alert(
+          'Email not verified',
+          'The email registered hasn\'t verified yet.\nNo email received? Check your spam folder or click "Resend" to send it again',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed')
+            },
+            {
+              text: 'Resend',
+              onPress: () => {
+                sendEmailVerification(auth.currentUser);
+                signOut(auth.currentUser);
+              }
+            }
+          ]
+        );
+        return;
+      }
+
       const userQuery = query(collection(firestore, 'users'), where('email', '==', email));
       const querySnapshot = await getDocs(userQuery);
       if (querySnapshot.empty) {
@@ -45,11 +66,30 @@ const SignInPage = ({ navigation }) => {
         );
         return;
       }
-  
-      navigation.navigate('MainScreen');
+
+      const user = auth.currentUser;
+      let userType;
+      if (user) {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+           userType = userData.user_type;
+        } else {
+          console.log('No such document!');
+        }
+      } else {
+        console.log('No user signed in!');
+      }
+
+      if (userType === 'admin') {
+        navigation.navigate('Admin');
+      } else {
+        navigation.navigate('MainScreen');
+      }
+
     } catch (error) {
       console.error('Error signing in: ', error);
-      if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+      if (error.code.match('auth/invalid-credential') || error.code.match('auth/user-not-found') || error.code.match('auth/missing-password')) {
         Alert.alert(
           'Incorrect Credentials',
           'The email or password provided is incorrect. Please try again.'

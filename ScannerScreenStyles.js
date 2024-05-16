@@ -5,66 +5,62 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFA500',
-  },
-  box: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
+    backgroundColor: '#FFE799',
   },
   logo: {
-    width: 200,
-    height: 200,
+    width: 250,
+    height: 250,
     resizeMode: 'contain',
     marginBottom: 20,
   },
   button: {
     width: '80%',
-    marginTop: 10,
+    marginTop: 5,
+    paddingVertical: 15,
     borderRadius: 10,
-    backgroundColor: '#FFA500',
+    backgroundColor: '#F79F25',
   },
-  modalContainer: {
+  buttonText: {
+    color: '#2D2D2D',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  buttonMargin: {
+    marginTop: 20,
+  },
+  infoButton: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    zIndex: 1,
+  },
+  modalOverlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  modalBox: {
-    backgroundColor: 'white',
+  modalContainer: {
+    width: '80%',
     padding: 20,
+    backgroundColor: 'white',
     borderRadius: 10,
-    position: 'relative',
-  },
-  modalContent: {
     alignItems: 'center',
   },
   modalText: {
-    fontSize: 18,
+    fontSize: 16,
+    color: '#2D2D2D',
     marginBottom: 20,
   },
-  modalButton: {
-    backgroundColor: '#FFA500',
+  closeModalButton: {
+    backgroundColor: '#F79F25',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
-    marginBottom: 10,
   },
-  modalButtonText: {
-    color: 'white',
+  closeModalButtonText: {
+    color: '#2D2D2D',
     fontSize: 16,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-  },
-  buttonMargin: {
-    marginHorizontal: 5,
-    marginVertical: 5,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 1,
   },
 });
