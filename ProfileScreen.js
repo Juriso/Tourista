@@ -9,7 +9,7 @@ import Toast from 'react-native-toast-message';
 import { profile } from '@tensorflow/tfjs';
 import { set } from 'firebase/database';
 
-ProfileScreen = () => {
+ProfileScreen = ({ navigation }) => {
   const isFocused = useIsFocused(); // Hook to check if screen is focused
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -38,6 +38,16 @@ ProfileScreen = () => {
       console.log('No user signed in!');
     }
   };
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      navigation.replace('Splash'); // Navigate to login screen after logout
+    } catch (error) {
+      console.error('Error logging out: ', error);
+    }
+  };
+
 
   useEffect(() => {
     fetchUserData();
@@ -266,6 +276,9 @@ ProfileScreen = () => {
            <View style={styles.submitContainer}>
             <Button title="Submit" color="orange" onPress={handleUpdateUserInfo} />
           </View>
+          <View style={styles.logout}>
+            <Button title="Logout" color="orange" onPress={handleLogout} />
+          </View>
       </View>
     </>
   );
@@ -316,7 +329,12 @@ const styles = StyleSheet.create({
     marginTop: 30,
     alignSelf: 'center',
     width: 125,
-  }
+  },
+  logout: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   
 });
 export default ProfileScreen;

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, Alert, TouchableOpacity, Button } from 'react-native';
 import { getFirestore, collection, getDocs, query, where, orderBy, limit, doc, deleteDoc } from 'firebase/firestore';
-import { db } from './firebaseConfig';
+import { db, auth } from './firebaseConfig';
 import { SelectList } from 'react-native-dropdown-select-list';
 
-const Admin = () => {
+const Admin = ({navigation}) => {
   const [bookings, setBookings] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [latestBookings, setLatestBookings] = useState([]);
@@ -25,6 +25,16 @@ const Admin = () => {
   useEffect(() => {
     fetchLatestBookings();
   }, [bookings]);
+
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      navigation.replace('Splash'); // Navigate to login screen after logout
+    } catch (error) {
+      console.error('Error logging out: ', error);
+    }
+  };
 
   const fetchLatestBookings = async () => {
     const q = query(collection(db, 'bookings'), orderBy('date', 'desc'), limit(10));
@@ -246,9 +256,15 @@ const Admin = () => {
       fontWeight: 'bold',
       textAlign: 'center',
     },
+    logout: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 75,
+    },
   });
 
   return (
+    <>
     <View style={styles.container}>
       <Text style={styles.title}>Booking Management</Text>
       <SelectList
@@ -267,6 +283,10 @@ const Admin = () => {
         keyboardShouldPersistTaps="always"
       />
     </View>
+          <View style={styles.logout}>
+          <Button title="Logout" color="orange" onPress={handleLogout} />
+        </View>
+    </>
   );
 };
 
