@@ -37,6 +37,7 @@ import Place26 from './Place26';
 
 import Locations from './Locations';
 import BookingForm from './BookingForm';
+import BookingScreen from './BookingScreen';
 import { AppProvider } from './AppContext';
 import { LogBox } from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -92,6 +93,13 @@ const App = () => {
           <Stack.Screen
             name="Admin"
             component={Admin}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="BookingScreen"
+            component={BookingScreen}
             options={{
               headerShown: false,
             }}
